@@ -2,8 +2,8 @@
     "chuckIdle": {
         "x": 413,
         "y": 114,
-        "width": 22,
-        "height": 28
+        "width": 18,
+        "height": 24
     },
     "chuckIgnition": {
         "x": 440,
@@ -72,10 +72,10 @@
         "height": 152
     },
     "gameOver": {
-        "x": 0,
+        "x": 174,
         "y": 228,
-        "width": 174,
-        "height": 152
+        "width": 226,
+        "height": 236
     },
     "startButton": {
         "x": 0,

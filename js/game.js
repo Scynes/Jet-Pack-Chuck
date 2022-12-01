@@ -40,6 +40,7 @@ let gameFrames = 0;
 
 const buildSpriteReferences = () => {
     game.ready.gr = spriteInfo.gameReady;
+    game.over.go = spriteInfo.gameOver;
     environment.background.bg = spriteInfo.gameBackground;
     environment.foreground.fg = spriteInfo.gameForeground;
 }
@@ -68,19 +69,42 @@ const chuckAnimation = {
 
 };
 
+/**
+ * Holds game event and status information.
+ */
 const game = {
 
+    state: {
+        current: 0,
+        ready: 0,
+        playing: 1,
+        over: 2
+    },
     ready: {
-        canvasX: 0,
-        canvasY: 228,
+        canvasX: $gameCanvas.width()/2 - 174/2,
+        canvasY: 120,
         gr: undefined,
 
         create: function() {
-            //$gameContext(sprite, )
+
+            // Only draws the ready image if the current game state is 'ready'
+            if (game.state.current == game.state.ready) {
+                $gameContext.drawImage(sprite, this.gr.x, this.gr.y, this.gr.width, this.gr.height, this.canvasX, this.canvasY, this.gr.width, this.gr.height)
+            }
         }
     },
     over: {
+        canvasX: $gameCanvas.width()/2 - 226/2,
+        canvasY: 120,
+        go: undefined,
 
+        create: function() {
+
+            // Only draws the over image if the current game state is 'over'
+            if (game.state.current == game.state.over) {
+                $gameContext.drawImage(sprite, this.go.x, this.go.y, this.go.width, this.go.height, this.canvasX, this.canvasY, this.go.width, this.go.height)
+            }
+        }
     }
 };
 
@@ -118,6 +142,35 @@ const environment = {
 };
 
 /**
+ * Registered to the click event listener for the game canvas. Will execute game logic
+ * based on the current game state.
+ * 
+ * @param {*} event 
+ */
+const gameClickListener = event => {
+    
+    switch (game.state.current) {
+
+        case game.state.ready:
+            game.state.current = game.state.playing;
+            break;
+
+        case game.state.playing:
+            break;
+
+        case game.state.over: 
+            game.state.current = game.state.ready;
+            break;
+
+        //Just a fall back
+        default:
+            break;
+
+    }
+
+}
+
+/**
  * Loads  and assigns the locally stored JSON object containing sprite coordinate information.
  */
 const loadJSON = () => {
@@ -150,6 +203,8 @@ const paint = () => {
 
     environment.background.create();
     environment.foreground.create();
+    game.ready.create()
+    game.over.create();
     chuckAnimation.create();
 
 };
@@ -173,6 +228,9 @@ sprite.onload = () => {
 
     // Assigns JSON sprite references.
     buildSpriteReferences();
+
+    // Builds the event listener
+    $gameCanvas.on('click', gameClickListener);
 
     // Begin game logic ticking.
      tick();
