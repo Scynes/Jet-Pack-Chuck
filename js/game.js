@@ -44,10 +44,10 @@ const animationFrameStates = ['chuckIdle', 'chuckIgnition', 'chuckBlasting', 'ch
 const chuckAnimation = {
 
     frame: [
-        {x: 0, y: 0, width: 0, height: 0}, //1st frame
-        {x: 0, y: 0, width: 0, height: 0}, //2nd frame
-        {x: 0, y: 0, width: 0, height: 0}, //3rd frame
-        {x: 0, y: 0, width: 0, height: 0}  //4th frame
+        {state: 'chuckIdle', x: 0, y: 0, width: 0, height: 0}, //1st frame
+        {state: 'chuckIgnition', x: 0, y: 0, width: 0, height: 0}, //2nd frame
+        {state: 'chuckBlasting', x: 0, y: 0, width: 0, height: 0}, //3rd frame
+        {state: 'chuckIgnition', x: 0, y: 0, width: 0, height: 0}  //4th frame
     ],
     canvasX: 50,
     canvasY: 150
@@ -66,11 +66,11 @@ const loadJSON = () => {
             spriteInfo = data;
             
             // Populates the animation frame data.
-            animationFrameStates.forEach((state, index) => {
-                chuckAnimation.frame[index].x = spriteInfo[state].x;
-                chuckAnimation.frame[index].y = spriteInfo[state].y;
-                chuckAnimation.frame[index].width = spriteInfo[state].width;
-                chuckAnimation.frame[index].height = spriteInfo[state].height;
+            chuckAnimation.frame.forEach(element => {
+                element.x = spriteInfo[element.state].x;
+                element.y = spriteInfo[element.state].y;
+                element.width = spriteInfo[element.state].width;
+                element.height = spriteInfo[element.state].height;
             });
         }
     })
