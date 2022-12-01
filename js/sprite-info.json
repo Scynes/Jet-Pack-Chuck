@@ -1,0 +1,92 @@
+{
+    "chuckIdle": {
+        "x": 413,
+        "y": 114,
+        "width": 18,
+        "height": 24
+    },
+    "chuckIgnition": {
+        "x": 440,
+        "y": 114,
+        "width": 18,
+        "height": 28
+    },
+    "chuckBlasting": {
+        "x": 467,
+        "y": 114,
+        "width": 18,
+        "height": 34
+    },
+    "bronzeChuckCoin": {
+        "x": 340,
+        "y": 161,
+        "width": 44,
+        "height": 44
+    },
+    "silverChuckCoin": {
+        "x": 340,
+        "y": 114,
+        "width": 44,
+        "height": 44
+    },
+    "goldChuckCoin": {
+        "x": 293,
+        "y": 161,
+        "width": 44,
+        "height": 44
+    },
+    "platinumChuckCoin": {
+        "x": 293,
+        "y": 114,
+        "width": 44,
+        "height": 44
+    },
+    "gameBackground": {
+        "x": 0,
+        "y": 24,
+        "width": 276,
+        "height": 204
+    },
+    "gameForeground": {
+        "x": 276,
+        "y": 0,
+        "width": 224,
+        "height": 112
+    },
+    "gameCactiUp": {
+        "x": 502,
+        "y": 0,
+        "width": 52,
+        "height": 400
+    },
+    "gameCactiDown": {
+        "x": 554,
+        "y": 0,
+        "width": 52,
+        "height": 400
+    },
+    "gameReady": {
+        "x": 0,
+        "y": 228,
+        "width": 174,
+        "height": 152
+    },
+    "gameOver": {
+        "x": 0,
+        "y": 228,
+        "width": 174,
+        "height": 152
+    },
+    "startButton": {
+        "x": 0,
+        "y": 228,
+        "width": 174,
+        "height": 152
+    },
+    "gameResults": {
+        "x": 0,
+        "y": 228,
+        "width": 174,
+        "height": 152
+    }
+}

@@ -1,0 +1,5 @@
+canvas#game-canvas {
+    display: block;
+    margin: 10% auto;
+    border: 3px solid;
+}
