@@ -13,6 +13,9 @@
 
 }
 
+/**
+ * jQuery object referencing the joke paragraph container.
+ */
 const $jokeParagraph = $('#joke');
 
 /**
@@ -29,6 +32,20 @@ const $gameContext = $gameCanvas.get(0).getContext('2d');
  * Image object containing game sprite images.
  */
  const sprite = new SpriteImage('./sprites/sprite.png');
+
+ /**
+  * Default angle degree for tilting sprites.
+  */
+ const degree = (Math.PI / 180);
+
+ // Game ready state.
+ const READY = 0;
+
+ // Game playing state.
+ const PLAYING = 1;
+
+ // Game over state.
+ const OVER = 2;
 
 /**
  * Holds the JSON object containing sprite coordinate information.
@@ -69,16 +86,21 @@ const chuck = {
     ],
     frame: 0,
     speedMultiplier: 0,
-    physicsGravity: 0.3,
+    physicsGravity: 0.25,
     jumpRate: 5,
+    rotation: 0,
     canvasX: 50,
     canvasY: 150,
 
     // Draws the animation based on the current frame.
     animate: function () {
-        //var chuck = this.frames[this.frame];
-        var chuck = game.state.current != game.state.over ? this.frames[this.frame] : spriteInfo.deathPoop;
-        $gameContext.drawImage(sprite, chuck.x, chuck.y, chuck.width, chuck.height, this.canvasX, this.canvasY, chuck.width, chuck.height);
+        var chuck = game.isGameState(OVER) ? spriteInfo.deathPoop : this.frames[this.frame];
+
+        $gameContext.save();
+        $gameContext.translate(this.canvasX , this.canvasY );
+        $gameContext.rotate(game.isGameState(OVER) ? 0 : this.rotation);
+        $gameContext.drawImage(sprite, chuck.x, chuck.y, chuck.width, chuck.height, -chuck.width/2, game.isGameState(OVER) ? (-chuck.height / 2) +15 : -chuck.height / 2, chuck.width, chuck.height);
+        $gameContext.restore();
     },
 
     // Calculates the boost jump to render.
@@ -106,25 +128,32 @@ const chuck = {
     update: function () {
         var chuck = this.frames[this.frame];
 
-        this.period = game.state.current == game.state.ready ? 10 : 5;
+        this.period = game.isGameState(READY) ? 10 : 5;
 
         this.frame += gameFrames % this.period == 0 ? 1 : 0;
 
         if (this.frame >= this.frames.length)
             this.frame = 0;
     
-        if (game.state.current != game.state.ready) {
+        if (!game.isGameState(READY)) {
 
             this.speedMultiplier += this.physicsGravity;
             this.canvasY += this.speedMultiplier;
 
             if (this.isDead(chuck)) {
+
                 this.canvasY = $gameCanvas.height() - environment.foreground.fg.height - (chuck.height / 2) + 65;
-                if (isPlaying()) {
+                if (game.isGameState(PLAYING)) {
                     getJoke();
-                    game.state.current = game.state.over;
+                    game.state = OVER;
                 }
             }
+
+            this.rotation = (this.speedMultiplier >= this.jumpRate) ? 180 * degree : 25 * degree;
+
+        } else {
+            this.canvasY = 150;
+            this.rotation = 0;
         }
     }
 };
@@ -134,12 +163,7 @@ const chuck = {
  */
 const game = {
 
-    state: {
-        current: 0,
-        ready: 0,
-        playing: 1,
-        over: 2
-    },
+    state: 0,
     ready: {
         canvasX: $gameCanvas.width()/2 - 174/2,
         canvasY: 120,
@@ -148,7 +172,7 @@ const game = {
         create: function() {
 
             // Only draws the ready image if the current game state is 'ready'
-            if (game.state.current == game.state.ready) {
+            if (game.isGameState(READY)) {
                 $gameContext.drawImage(sprite, this.gr.x, this.gr.y, this.gr.width, this.gr.height, this.canvasX, this.canvasY, this.gr.width, this.gr.height)
             }
         }
@@ -161,11 +185,16 @@ const game = {
         create: function() {
 
             // Only draws the over image if the current game state is 'over'
-            if (game.state.current == game.state.over) {
+            if (game.isGameState(OVER)) {
                 $gameContext.drawImage(sprite, this.go.x, this.go.y, this.go.width, this.go.height, this.canvasX, this.canvasY, this.go.width, this.go.height)
             }
         
         }
+    },
+
+    // Checks if the current game state matches a given state.
+    isGameState: function(state) {
+        return this.state == state;
     }
 };
 
@@ -210,20 +239,20 @@ const environment = {
  */
 const gameClickListener = event => {
 
-    switch (game.state.current) {
+    switch (game.state) {
 
-        case game.state.ready:
-            game.state.current = game.state.playing;
+        case READY:
+            game.state = PLAYING;
             break;
 
-        case game.state.playing:
+        case PLAYING:
             //chuck.animate();
             chuck.boost();
             break;
 
-        case game.state.over: 
+        case OVER: 
             chuck.reset();
-            game.state.current = game.state.ready;
+            game.state = READY
             break;
 
         //Just a fall back
@@ -257,15 +286,6 @@ const loadJSON = () => {
 };
 
 /**
- * Checks if a game is currently being played.
- * 
- * @returns true if the game is currently in the playing state.
- */
-const isPlaying = () => {
-    return game.state.current == game.state.playing;
-}
-
-/**
  * Grabs a random joke from the chuck API and displays it in a paragraph.
  */
 const getJoke = () => {
@@ -292,7 +312,7 @@ const paint = () => {
 
     environment.background.create();
     environment.foreground.create();
-    game.ready.create()
+    game.ready.create();
     game.over.create();
     chuck.animate();
 
@@ -314,6 +334,9 @@ const tick = () => {
 
 };
 
+/**
+ * Builds the game once the sprite has been loaded.
+ */
 sprite.onload = () => {
 
     // Load the JSON sprite data.
@@ -328,9 +351,4 @@ sprite.onload = () => {
     // Begin game logic ticking.
      tick();
 }
-
-
-
-
-
 
