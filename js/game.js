@@ -91,6 +91,10 @@ const chuck = {
         this.canvasY = 150;
     },
 
+    isDead: function(chuck) {
+
+    },
+
     // Updates animation frames based on cycles.
     update: function () {
         var chuck = this.frames[this.frame];
@@ -108,8 +112,8 @@ const chuck = {
             this.speedMultiplier += this.physicsGravity;
             this.canvasY += this.speedMultiplier;
 
-            if ((this.canvasY + chuck.height / 2) >= ($gameCanvas.height() - environment.foreground.fg.height)) {
-                this.canvasY = $gameCanvas.height() - environment.foreground.fg.height - (chuck.height / 2) + 3;
+            if ((this.canvasY + chuck.height / 2) >= ($gameCanvas.height() - (environment.foreground.fg.height - 49))) {
+                this.canvasY = $gameCanvas.height() - environment.foreground.fg.height - (chuck.height / 2) + 65;
                 if (game.state.current == game.state.playing) {
                     getJoke();
                     game.state.current = game.state.over;
@@ -168,7 +172,7 @@ const environment = {
 
     background: {
         canvasX: 0,
-        canvasY: $gameCanvas.height() - 204,
+        canvasY: $gameCanvas.height() - 270,
         bg: undefined,
 
         // Draws the background image to the canvas.
@@ -270,7 +274,7 @@ const getJoke = () => {
  */
 const paint = () => {
 
-    $gameContext.fillStyle = '#70c5ce';
+    $gameContext.fillStyle = '#faaf3d';
     $gameContext.fillRect(0, 0, $gameCanvas.width(), $gameCanvas.height());
 
     environment.background.create();

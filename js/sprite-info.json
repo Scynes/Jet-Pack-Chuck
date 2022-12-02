@@ -43,9 +43,9 @@
     },
     "gameBackground": {
         "x": 0,
-        "y": 24,
+        "y": 0,
         "width": 276,
-        "height": 204
+        "height": 228
     },
     "gameForeground": {
         "x": 276,
@@ -91,8 +91,8 @@
     },
     "deathPoop": {
         "x": 456,
-        "y": 165,
-        "width": 13,
-        "height": 10
+        "y": 152,
+        "width": 24,
+        "height": 32
     }
 }
