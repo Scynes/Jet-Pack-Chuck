@@ -69,8 +69,8 @@ const chuck = {
     ],
     frame: 0,
     speedMultiplier: 0,
-    physicsGravity: 0.25,
-    jumpRate: 4.6,
+    physicsGravity: 0.3,
+    jumpRate: 5,
     canvasX: 50,
     canvasY: 150,
 
@@ -81,18 +81,25 @@ const chuck = {
         $gameContext.drawImage(sprite, chuck.x, chuck.y, chuck.width, chuck.height, this.canvasX, this.canvasY, chuck.width, chuck.height);
     },
 
+    // Calculates the boost jump to render.
     boost: function () {
         this.speedMultiplier =- this.jumpRate;
     },
 
+    // Tesets the chuck animation variables to defaults.
     reset: function() {
         this.frame = 0;
         this.speedMultiplier = 0;
         this.canvasY = 150;
     },
 
+    // Checks if chuks sprite position has collided with bounds for death.
     isDead: function(chuck) {
+        var collisionHeight = ($gameCanvas.height() - environment.foreground.fg.height);
+        var foregroundOffset = 49; // This is the increased collision y axis on the foreground.
+        var chuckLocation = this.canvasY + (chuck.height / 2);
 
+        return (chuckLocation >= (collisionHeight + foregroundOffset));
     },
 
     // Updates animation frames based on cycles.
@@ -106,23 +113,20 @@ const chuck = {
         if (this.frame >= this.frames.length)
             this.frame = 0;
     
-        if (game.state.current == game.state.ready) {
+        if (game.state.current != game.state.ready) {
 
-        } else {
             this.speedMultiplier += this.physicsGravity;
             this.canvasY += this.speedMultiplier;
 
-            if ((this.canvasY + chuck.height / 2) >= ($gameCanvas.height() - (environment.foreground.fg.height - 49))) {
+            if (this.isDead(chuck)) {
                 this.canvasY = $gameCanvas.height() - environment.foreground.fg.height - (chuck.height / 2) + 65;
-                if (game.state.current == game.state.playing) {
+                if (isPlaying()) {
                     getJoke();
                     game.state.current = game.state.over;
                 }
             }
         }
-
     }
-
 };
 
 /**
@@ -205,7 +209,7 @@ const environment = {
  * @param {*} event 
  */
 const gameClickListener = event => {
-    console.log(game.state.current)
+
     switch (game.state.current) {
 
         case game.state.ready:
@@ -251,6 +255,15 @@ const loadJSON = () => {
         }
     })
 };
+
+/**
+ * Checks if a game is currently being played.
+ * 
+ * @returns true if the game is currently in the playing state.
+ */
+const isPlaying = () => {
+    return game.state.current == game.state.playing;
+}
 
 /**
  * Grabs a random joke from the chuck API and displays it in a paragraph.
