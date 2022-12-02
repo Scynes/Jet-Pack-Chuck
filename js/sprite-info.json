@@ -88,5 +88,11 @@
         "y": 228,
         "width": 174,
         "height": 152
+    },
+    "deathPoop": {
+        "x": 456,
+        "y": 165,
+        "width": 13,
+        "height": 10
     }
 }

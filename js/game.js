@@ -46,7 +46,11 @@ const buildSpriteReferences = () => {
 }
 
 /**
- * Holds animation frame related information.
+ * Holds animation frame related information. and animation updating logic.
+ * 
+ * @update updates frame variables and rending position.
+ * 
+ * @animate renders the image by drawing it to the canvas.
  */
 const chuck = {
 
@@ -58,36 +62,50 @@ const chuck = {
     ],
     frame: 0,
     speedMultiplier: 0,
-    physicsGravity: 0.2,
-    jumpRate: 5,
+    physicsGravity: 0.25,
+    jumpRate: 4.6,
     canvasX: 50,
     canvasY: 150,
 
     // Draws the animation based on the current frame.
     animate: function () {
-        var chuck = this.frames[this.frame];
+        //var chuck = this.frames[this.frame];
+        var chuck = game.state.current != game.state.over ? this.frames[this.frame] : spriteInfo.deathPoop;
         $gameContext.drawImage(sprite, chuck.x, chuck.y, chuck.width, chuck.height, this.canvasX, this.canvasY, chuck.width, chuck.height);
     },
 
-    // Updates animation frames based obn cycles.
+    boost: function () {
+        this.speedMultiplier =- this.jumpRate;
+    },
+
+    reset: function() {
+        this.frame = 0;
+        this.speedMultiplier = 0;
+        this.canvasY = 150;
+    },
+
+    // Updates animation frames based on cycles.
     update: function () {
         var chuck = this.frames[this.frame];
 
-        this.speedMultiplier = game.state.current == game.state.ready ? 10 : 5;
+        this.period = game.state.current == game.state.ready ? 10 : 5;
 
-        this.frame += gameFrames % this.speedMultiplier == 0 ? 1 : 0;
+        this.frame += gameFrames % this.period == 0 ? 1 : 0;
 
-        if (this.frame >= this.frames.length) 
+        if (this.frame >= this.frames.length)
             this.frame = 0;
     
         if (game.state.current == game.state.ready) {
-            
+
         } else {
             this.speedMultiplier += this.physicsGravity;
             this.canvasY += this.speedMultiplier;
 
             if ((this.canvasY + chuck.height / 2) >= ($gameCanvas.height() - environment.foreground.fg.height)) {
-                this.canvasY = $gameCanvas.height() - environment.foreground.fg.height - (chuck.height / 2);
+                this.canvasY = $gameCanvas.height() - environment.foreground.fg.height - (chuck.height / 2) + 3;
+                if (game.state.current == game.state.playing) {
+                    game.state.current = game.state.over;
+                }
             }
         }
 
@@ -96,7 +114,7 @@ const chuck = {
 };
 
 /**
- * Holds game event and status information.
+ * Holds game event and status information and rendering methods for game state interfaces.
  */
 const game = {
 
@@ -183,10 +201,12 @@ const gameClickListener = event => {
             break;
 
         case game.state.playing:
-            chuck.animate();
+            //chuck.animate();
+            chuck.boost();
             break;
 
         case game.state.over: 
+            chuck.reset();
             game.state.current = game.state.ready;
             break;
 
@@ -233,7 +253,6 @@ const paint = () => {
     environment.foreground.create();
     game.ready.create()
     game.over.create();
-    chuck.update();
     chuck.animate();
 
 };
@@ -243,6 +262,7 @@ const paint = () => {
  */
 const tick = () => {
 
+    chuck.update();
     paint();
 
     //Increment the game frames each loop
