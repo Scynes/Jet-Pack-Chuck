@@ -13,6 +13,8 @@
 
 }
 
+const $jokeParagraph = $('#joke');
+
 /**
  * The HTML canvas held as a jQuery object reference.
  */
@@ -37,6 +39,11 @@ let spriteInfo;
  * The current game frames.
  */
 let gameFrames = 0;
+
+/**
+ * The current joke.
+ */
+let joke = '';
 
 const buildSpriteReferences = () => {
     game.ready.gr = spriteInfo.gameReady;
@@ -104,6 +111,7 @@ const chuck = {
             if ((this.canvasY + chuck.height / 2) >= ($gameCanvas.height() - environment.foreground.fg.height)) {
                 this.canvasY = $gameCanvas.height() - environment.foreground.fg.height - (chuck.height / 2) + 3;
                 if (game.state.current == game.state.playing) {
+                    getJoke();
                     game.state.current = game.state.over;
                 }
             }
@@ -238,6 +246,22 @@ const loadJSON = () => {
             });
         }
     })
+};
+
+/**
+ * Grabs a random joke from the chuck API and displays it in a paragraph.
+ */
+const getJoke = () => {
+
+    $.ajax({url: 'https://api.chucknorris.io/jokes/random'}).then(
+        (data) => {
+            $jokeParagraph.text(data.value);
+        },
+        (err) => {
+
+        }
+    )
+
 };
 
 /**

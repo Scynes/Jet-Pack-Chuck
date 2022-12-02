@@ -1,5 +1,10 @@
+body {
+    background-color: rgb(38, 58, 58);
+}
+
 canvas#game-canvas {
     display: block;
     margin: 10% auto;
     border: 3px solid;
+    user-select: none;;
 }
