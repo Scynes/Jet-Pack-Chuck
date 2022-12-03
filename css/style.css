@@ -14,8 +14,7 @@ div#inner-container {
 
 div#joke-container {
     background-color: black;
-    border-color: aqua;
-    border: 2px solid;
+    padding: 1px;
     opacity: .45;
     font-weight: 300;
     user-select: text;
@@ -52,4 +51,59 @@ header > p {
     font-weight: 100;
     color: rgba(97, 58, 0, 0.45);
 }
+
+#switch{
+    top: 6px;
+    right: 6px;
+    width: 75px;
+    height: 40px;
+}
+
+.toggle-dark-mode{
+    position: absolute;
+    transition: border-color .6s  ease-out;
+    box-sizing: border-box;
+    background-color: rgba(0, 0, 0, 0.35);
+    border: 2px solid;
+    border-color: rgba(0, 0, 0, 0);
+}
+
+.toggle-button{
+    position: absolute;
+    inset: 4px;
+    width: 28px;
+    background-color: #444249;
+    cursor: pointer;
+    transition: all .3s .2s;
+}
+
+.on-status .toggle-button {
+    inset: 3px 3px 3px;
+    width: 65px;
+    background-color: rgb(46, 172, 225);
+    transition: all .2s;
+}
+
+.on {
+    position: absolute;
+    inset: 0;
+    line-height: 38px;
+    font-size: 16px;
+    cursor: pointer;
+    color: #00000000;
+}
+
+.on-status .on {
+    color: rgb(59, 106, 125);
+    transition: color .3s .15s ;
+}
+
+.off{
+    position: absolute;
+    right: 10%;
+    line-height: 38px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
 

@@ -237,7 +237,7 @@ const environment = {
  * 
  * @param {*} event 
  */
-const gameClickListener = event => {
+const gameClickListener = () => {
 
     switch (game.state) {
 
@@ -263,6 +263,20 @@ const gameClickListener = event => {
     }
 
 }
+
+/**
+ * Binds to the canvas keydown. This will fire the gameClickListener()
+ * if a valid key was pressed.
+ * 
+ * @param {*} event pressed key
+ */
+const keyPressedListener = event => {
+
+    if (event.keyCode === 32) {
+        gameClickListener();
+    }
+
+};
 
 /**
  * Loads  and assigns the locally stored JSON object containing sprite coordinate information.
@@ -349,7 +363,16 @@ sprite.onload = () => {
     // Builds the event listener
     $gameCanvas.on('click', gameClickListener);
 
+    // Builds the key press listener for using spacebar.
+    $(document).keypress(keyPressedListener);
+
+    // Listens for clicks on the dark mode toggle.
+    $('.toggle-dark-mode').click(function() {
+        $(this).toggleClass('on-status')
+    });
+
     // Begin game logic ticking.
      tick();
 }
+
 
