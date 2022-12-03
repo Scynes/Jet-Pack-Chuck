@@ -251,6 +251,7 @@ const gameClickListener = event => {
             break;
 
         case OVER: 
+        $jokeParagraph.text('Play for a Chuck Norris joke!');
             chuck.reset();
             game.state = READY
             break;

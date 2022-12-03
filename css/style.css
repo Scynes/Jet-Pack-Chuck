@@ -3,7 +3,7 @@
 
 @keyframes bg-scrolling-reverse {
   100% {
-    background-position: 50px 50px;
+    background-position: -50px -50px;
   }
 }
 
@@ -25,6 +25,10 @@ div#joke-container {
     user-select: text;
 }
 
+p::first-letter {
+    text-transform: uppercase;
+}
+
 canvas#game-canvas {
     margin: 0 auto;
     border: 15px solid;
@@ -36,7 +40,7 @@ body {
     background: url("../images/background.png") repeat 0 0;
     animation: bg-scrolling-reverse 1.5s infinite;
     animation-timing-function: linear;
-    font: 18px/1.5 exo, ubuntu, "segoe ui", helvetica, arial, sans-serif;
+    font: 20px/1.5 exo, "segoe ui", helvetica, arial, sans-serif;
     text-align: center;
     color: rgb(245, 180, 0);
     user-select: none;
