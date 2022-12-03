@@ -1,10 +1,45 @@
-body {
-    background-color: rgb(38, 58, 58);
+
+@import url(https://fonts.googleapis.com/css?family=Exo:100);
+
+@keyframes bg-scrolling-reverse {
+  100% {
+    background-position: 50px 50px;
+  }
+}
+
+div#outer-container {
+    display: flex;
+    align-items: center;
+    height: 100vh;
+}
+
+div#inner-container {
+    margin: auto auto;
+    width: 410px;
+}
+
+div#joke-container {
+    background-color: black;
+    opacity: .45;
+    font-weight: 300;
+    user-select: text;
 }
 
 canvas#game-canvas {
-    display: block;
-    margin: 10% auto;
-    border: 3px solid;
-    user-select: none;;
+    margin: 0 auto;
+    border: 15px solid;
+    border-color: rgba(0, 0, 0, 0.45);
+    
 }
+
+body {
+    background: url("../images/background.png") repeat 0 0;
+    animation: bg-scrolling-reverse 1.5s infinite;
+    animation-timing-function: linear;
+    font: 18px/1.5 exo, ubuntu, "segoe ui", helvetica, arial, sans-serif;
+    text-align: center;
+    color: rgb(245, 180, 0);
+    user-select: none;
+}
+
+
