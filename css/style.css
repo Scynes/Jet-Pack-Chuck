@@ -7,19 +7,15 @@
   }
 }
 
-div#outer-container {
-    display: flex;
-    align-items: center;
-    height: 100vh;
-}
-
 div#inner-container {
-    margin: auto auto;
-    width: 410px;
+    margin:  0% auto;
+    width: 470px;
 }
 
 div#joke-container {
     background-color: black;
+    border-color: aqua;
+    border: 2px solid;
     opacity: .45;
     font-weight: 300;
     user-select: text;
@@ -30,20 +26,30 @@ p::first-letter {
 }
 
 canvas#game-canvas {
-    margin: 0 auto;
     border: 15px solid;
     border-color: rgba(0, 0, 0, 0.45);
-    
+}
+
+html, body {
+    margin: 0 auto;
+    height: 100%;
 }
 
 body {
-    background: url("../images/background.png") repeat 0 0;
+    background: url("../images/background.png") repeat;
     animation: bg-scrolling-reverse 1.5s infinite;
     animation-timing-function: linear;
     font: 20px/1.5 exo, "segoe ui", helvetica, arial, sans-serif;
     text-align: center;
-    color: rgb(245, 180, 0);
+    color: rgb(223, 183, 73);
     user-select: none;
 }
 
+header > p {
+    margin: 0;
+    padding: 40px;
+    font-size: 4.5rem;
+    font-weight: 100;
+    color: rgba(97, 58, 0, 0.45);
+}
 
