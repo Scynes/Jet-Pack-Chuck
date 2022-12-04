@@ -31,7 +31,7 @@ const $gameContext = $gameCanvas.get(0).getContext('2d');
 /**
  * Image object containing game sprite images.
  */
- const sprite = new SpriteImage('./sprites/sprite.png');
+ const sprite = new SpriteImage('./images/sprites/sprite.png');
 
  /**
   * Default angle degree for tilting sprites.
@@ -62,6 +62,19 @@ let gameFrames = 0;
  */
 let joke = '';
 
+/**
+ * Handles toggling dark mode styling on the webpage.
+ */
+const toggleDarkMode = (event) => {
+    $('.toggle-dark-mode').toggleClass('on-status');
+    $('body').toggleClass('dark-mode');
+    $('header').toggleClass('dark-mode');
+}
+
+/**
+ * Builds all the sprite information for the environment and game by
+ * retrieving the related data from the loaded JSON file.
+ */
 const buildSpriteReferences = () => {
     game.ready.gr = spriteInfo.gameReady;
     game.over.go = spriteInfo.gameOver;
@@ -367,12 +380,12 @@ sprite.onload = () => {
     $(document).keypress(keyPressedListener);
 
     // Listens for clicks on the dark mode toggle.
-    $('.toggle-dark-mode').click(function() {
-        $(this).toggleClass('on-status')
-    });
+    $('.toggle-dark-mode').click(toggleDarkMode);
 
     // Begin game logic ticking.
      tick();
 }
+
+toggleDarkMode();
 
 

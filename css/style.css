@@ -14,7 +14,7 @@ div#inner-container {
 
 div#joke-container {
     background-color: black;
-    padding: 1px;
+    padding: 10px;
     opacity: .45;
     font-weight: 300;
     user-select: text;
@@ -22,6 +22,12 @@ div#joke-container {
 
 p::first-letter {
     text-transform: uppercase;
+}
+
+p#joke {
+    margin: 0;
+    padding: 10px;
+    color: rgb(255, 203, 60);
 }
 
 canvas#game-canvas {
@@ -36,6 +42,13 @@ html, body {
 
 body {
     background: url("../images/background.png") repeat;
+}
+
+body.dark-mode {
+    background: url("../images/background-dark.png") repeat;
+}
+
+body {
     animation: bg-scrolling-reverse 1.5s infinite;
     animation-timing-function: linear;
     font: 20px/1.5 exo, "segoe ui", helvetica, arial, sans-serif;
@@ -45,11 +58,18 @@ body {
 }
 
 header > p {
+    color: rgba(97, 58, 0, 0.45);
+}
+
+header.dark-mode > p {
+    color: rgba(223, 183, 73, 0.75);
+}
+
+header > p {
     margin: 0;
     padding: 40px;
     font-size: 4.5rem;
     font-weight: 100;
-    color: rgba(97, 58, 0, 0.45);
 }
 
 #switch{
