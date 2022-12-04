@@ -60,6 +60,7 @@ body {
 
 header > p {
     color: rgba(97, 58, 0, 0.45);
+    transition: 1s;
 }
 
 header.dark-mode > p {
@@ -71,6 +72,10 @@ header > p {
     padding: 40px;
     font-size: 4.5rem;
     font-weight: 100;
+}
+
+i.dark-mode {
+    color: rgb(255, 255, 255);
 }
 
 #switch{
@@ -101,7 +106,7 @@ header > p {
 .on-status .toggle-button {
     inset: 3px 3px 3px;
     width: 65px;
-    background-color: rgb(46, 172, 225);
+    background-color: rgb(23, 37, 44);
     transition: all .2s;
 }
 

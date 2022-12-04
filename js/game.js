@@ -388,7 +388,3 @@ sprite.onload = () => {
     // Begin game logic ticking.
      tick();
 }
-
-toggleDarkMode();
-
-
