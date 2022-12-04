@@ -79,8 +79,8 @@ const toggleDarkMode = (event) => {
 const buildSpriteReferences = () => {
     game.ready.gr = spriteInfo.gameReady;
     game.over.go = spriteInfo.gameOver;
-    environment.background.bg = spriteInfo.gameBackground;
-    environment.foreground.fg = spriteInfo.gameForeground;
+    environment.background.data = spriteInfo.gameBackground;
+    environment.foreground.data = spriteInfo.gameForeground;
 }
 
 /**
@@ -131,7 +131,7 @@ const chuck = {
 
     // Checks if chuks sprite position has collided with bounds for death.
     isDead: function(chuck) {
-        var collisionHeight = ($gameCanvas.height() - environment.foreground.fg.height);
+        var collisionHeight = ($gameCanvas.height() - environment.foreground.data.height);
         var foregroundOffset = 49; // This is the increased collision y axis on the foreground.
         var chuckLocation = this.canvasY + (chuck.height / 2);
 
@@ -156,7 +156,7 @@ const chuck = {
 
             if (this.isDead(chuck)) {
 
-                this.canvasY = $gameCanvas.height() - environment.foreground.fg.height - (chuck.height / 2) + 65;
+                this.canvasY = $gameCanvas.height() - environment.foreground.data.height - (chuck.height / 2) + 65;
                 if (game.inState(PLAYING)) {
                     getJoke();
                     game.state = OVER;
@@ -220,36 +220,36 @@ const environment = {
     background: {
         canvasX: 0,
         canvasY: $gameCanvas.height() - 270,
-        bg: undefined,
+        data: undefined,
+        deltaX: 0.5,
 
         // Draws the background image to the canvas.
         create: function() {
 
-            $gameContext.drawImage(sprite, this.bg.x, this.bg.y, this.bg.width, this.bg.height, this.canvasX, this.canvasY, this.bg.width, this.bg.height);
-            $gameContext.drawImage(sprite, this.bg.x, this.bg.y, this.bg.width, this.bg.height, this.canvasX + this.bg.width, this.canvasY, this.bg.width, this.bg.height);
-
+            $gameContext.drawImage(sprite, this.data.x, this.data.y, this.data.width, this.data.height, this.canvasX, this.canvasY, this.data.width, this.data.height);
+            $gameContext.drawImage(sprite, this.data.x, this.data.y, this.data.width, this.data.height, this.canvasX + this.data.width, this.canvasY, this.data.width, this.data.height);
+            $gameContext.drawImage(sprite, this.data.x, this.data.y, this.data.width, this.data.height, this.canvasX + (this.data.width * 2), this.canvasY, this.data.width, this.data.height);
         }
     },
     foreground: {
         canvasX: 0,
         canvasY: $gameCanvas.height() - 112,
-        deltaX: 1,
-        fg: undefined,
+        deltaX: 2,
+        data: undefined,
 
         // Draws the foreground image to the canvas.
         create: function() {
 
-            $gameContext.drawImage(sprite, this.fg.x, this.fg.y, this.fg.width, this.fg.height, this.canvasX, this.canvasY, this.fg.width, this.fg.height);
-            $gameContext.drawImage(sprite, this.fg.x, this.fg.y, this.fg.width, this.fg.height, this.canvasX + this.fg.width, this.canvasY, this.fg.width, this.fg.height);
-            $gameContext.drawImage(sprite, this.fg.x, this.fg.y, this.fg.width, this.fg.height, this.canvasX + (this.fg.width * 2), this.canvasY, this.fg.width, this.fg.height);
-        },
+            $gameContext.drawImage(sprite, this.data.x, this.data.y, this.data.width, this.data.height, this.canvasX, this.canvasY, this.data.width, this.data.height);
+            $gameContext.drawImage(sprite, this.data.x, this.data.y, this.data.width, this.data.height, this.canvasX + this.data.width, this.canvasY, this.data.width, this.data.height);
+            $gameContext.drawImage(sprite, this.data.x, this.data.y, this.data.width, this.data.height, this.canvasX + (this.data.width * 2), this.canvasY, this.data.width, this.data.height);
+        }
+    },
+    update: function(type) {
 
-        update: function() {
+        if (game.inState(PLAYING)) {
 
-            if (game.inState(PLAYING)) {
-
-                this.canvasX = ((this.canvasX - this.deltaX) % (this.fg.width));
-            }
+            type.canvasX = ((type.canvasX - type.deltaX) % (type.data.width));
         }
     }
 };
@@ -365,7 +365,8 @@ const tick = () => {
     chuck.update();
 
     // Updates the foreground position.
-    environment.foreground.update();
+    environment.update(environment.foreground);
+    environment.update(environment.background)
 
     // Paints the game details on the canvas.
     paint();
