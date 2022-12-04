@@ -53,13 +53,13 @@
         "width": 224,
         "height": 112
     },
-    "gameCactiUp": {
+    "gameCactiDown": {
         "x": 502,
         "y": 0,
         "width": 52,
         "height": 400
     },
-    "gameCactiDown": {
+    "gameCactiUp": {
         "x": 554,
         "y": 0,
         "width": 52,

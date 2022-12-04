@@ -81,6 +81,8 @@ const buildSpriteReferences = () => {
     game.over.go = spriteInfo.gameOver;
     environment.background.data = spriteInfo.gameBackground;
     environment.foreground.data = spriteInfo.gameForeground;
+    environment.obstacle.above.data = spriteInfo.gameCactiUp;
+    environment.obstacle.below.data = spriteInfo.gameCactiDown;
 }
 
 /**
@@ -101,6 +103,7 @@ const chuck = {
     frame: 0,
     speedMultiplier: 0,
     physicsGravity: 0.25,
+    collisionRadius: 17,
     jumpRate: 5,
     rotation: 0,
     canvasX: 50,
@@ -221,14 +224,16 @@ const environment = {
         canvasX: 0,
         canvasY: $gameCanvas.height() - 270,
         data: undefined,
-        deltaX: 0.5,
+        deltaX: 1,
 
         // Draws the background image to the canvas.
         create: function() {
+            // This prevents a white line from happening when the canvasX is a decimal.
+            const canvasXR = Math.round(this.canvasX);
 
-            $gameContext.drawImage(sprite, this.data.x, this.data.y, this.data.width, this.data.height, this.canvasX, this.canvasY, this.data.width, this.data.height);
-            $gameContext.drawImage(sprite, this.data.x, this.data.y, this.data.width, this.data.height, this.canvasX + this.data.width, this.canvasY, this.data.width, this.data.height);
-            $gameContext.drawImage(sprite, this.data.x, this.data.y, this.data.width, this.data.height, this.canvasX + (this.data.width * 2), this.canvasY, this.data.width, this.data.height);
+            $gameContext.drawImage(sprite, this.data.x, this.data.y, this.data.width, this.data.height, canvasXR, this.canvasY, this.data.width, this.data.height);
+            $gameContext.drawImage(sprite, this.data.x, this.data.y, this.data.width, this.data.height, canvasXR + this.data.width, this.canvasY, this.data.width, this.data.height);
+            $gameContext.drawImage(sprite, this.data.x, this.data.y, this.data.width, this.data.height, canvasXR + (this.data.width * 2), this.canvasY, this.data.width, this.data.height);
         }
     },
     foreground: {
@@ -243,6 +248,51 @@ const environment = {
             $gameContext.drawImage(sprite, this.data.x, this.data.y, this.data.width, this.data.height, this.canvasX, this.canvasY, this.data.width, this.data.height);
             $gameContext.drawImage(sprite, this.data.x, this.data.y, this.data.width, this.data.height, this.canvasX + this.data.width, this.canvasY, this.data.width, this.data.height);
             $gameContext.drawImage(sprite, this.data.x, this.data.y, this.data.width, this.data.height, this.canvasX + (this.data.width * 2), this.canvasY, this.data.width, this.data.height);
+        }
+    },
+    obstacle: {
+
+        safeZoneHeight: 100,
+        maxCanvasY: -150,
+        deltaX: 2,
+        position: [],
+
+        above: {
+            data: undefined
+        },
+        below: {
+            data: undefined,
+        },
+
+        create: function() {
+            
+            this.position.forEach(element => {
+                var aboveY = element.y;
+                var belowY = element.y + 400 + this.safeZoneHeight;
+
+                $gameContext.drawImage(sprite, this.above.data.x, this.above.data.y, this.above.data.width, this.above.data.height, element.x, aboveY, this.above.data.width, this.above.data.height);
+                $gameContext.drawImage(sprite, this.below.data.x, this.below.data.y, this.below.data.width, this.below.data.height, element.x, belowY, this.below.data.width, this.below.data.height);
+            })
+        },
+
+        update: function() {
+ 
+            if (!game.inState(PLAYING)) return;
+
+            if ((gameFrames % 100) == 0) {
+                this.position.push({
+                    x: $gameCanvas.width(),
+                    y: (this.maxCanvasY * (Math.random() + 1))
+                });
+            }
+
+            this.position.forEach(element => {
+                element.x -= this.deltaX;
+
+                // Prevent rendering of obstacles after it's passed the visible canvas.
+                if (element.x + 252 <= 0) this.position.shift();
+            });
+
         }
     },
     update: function(type) {
@@ -349,6 +399,7 @@ const paint = () => {
     $gameContext.fillRect(0, 0, $gameCanvas.width(), $gameCanvas.height());
 
     environment.background.create();
+    environment.obstacle.create();
     environment.foreground.create();
     game.ready.create();
     game.over.create();
@@ -367,6 +418,9 @@ const tick = () => {
     // Updates the foreground position.
     environment.update(environment.foreground);
     environment.update(environment.background)
+
+    // Updates the obstacle positions.
+    environment.obstacle.update();
 
     // Paints the game details on the canvas.
     paint();
