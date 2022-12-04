@@ -55,6 +55,7 @@ body {
     text-align: center;
     color: rgb(223, 183, 73);
     user-select: none;
+    transition: .5s linear;
 }
 
 header > p {
@@ -92,7 +93,7 @@ header > p {
     position: absolute;
     inset: 4px;
     width: 28px;
-    background-color: #444249;
+
     cursor: pointer;
     transition: all .3s .2s;
 }
