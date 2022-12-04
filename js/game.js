@@ -69,9 +69,7 @@ const toggleDarkMode = (event) => {
     $('.toggle-dark-mode').toggleClass('on-status');
     $('body').toggleClass('dark-mode');
     $('header').toggleClass('dark-mode');
-    $('i').toggleClass('dark-mode');
-    $('i').toggleClass('fas fa-moon')
-    $('i').toggleClass('fa-regular fa-moon')
+    $('i').toggleClass('fa-regular fa-moon dark-mode fa-solid fa-moon')
 }
 
 /**
