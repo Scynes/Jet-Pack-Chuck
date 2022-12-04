@@ -108,12 +108,12 @@ const chuck = {
 
     // Draws the animation based on the current frame.
     animate: function () {
-        var chuck = game.isGameState(OVER) ? spriteInfo.deathPoop : this.frames[this.frame];
+        var chuck = game.inState(OVER) ? spriteInfo.deathPoop : this.frames[this.frame];
 
         $gameContext.save();
         $gameContext.translate(this.canvasX , this.canvasY );
-        $gameContext.rotate(game.isGameState(OVER) ? 0 : this.rotation);
-        $gameContext.drawImage(sprite, chuck.x, chuck.y, chuck.width, chuck.height, -chuck.width/2, game.isGameState(OVER) ? (-chuck.height / 2) +15 : -chuck.height / 2, chuck.width, chuck.height);
+        $gameContext.rotate(game.inState(OVER) ? 0 : this.rotation);
+        $gameContext.drawImage(sprite, chuck.x, chuck.y, chuck.width, chuck.height, -chuck.width/2, game.inState(OVER) ? (-chuck.height / 2) +15 : -chuck.height / 2, chuck.width, chuck.height);
         $gameContext.restore();
     },
 
@@ -142,14 +142,14 @@ const chuck = {
     update: function () {
         var chuck = this.frames[this.frame];
 
-        this.period = game.isGameState(READY) ? 10 : 5;
+        this.period = game.inState(READY) ? 10 : 5;
 
         this.frame += gameFrames % this.period == 0 ? 1 : 0;
 
         if (this.frame >= this.frames.length)
             this.frame = 0;
     
-        if (!game.isGameState(READY)) {
+        if (!game.inState(READY)) {
 
             this.speedMultiplier += this.physicsGravity;
             this.canvasY += this.speedMultiplier;
@@ -157,7 +157,7 @@ const chuck = {
             if (this.isDead(chuck)) {
 
                 this.canvasY = $gameCanvas.height() - environment.foreground.fg.height - (chuck.height / 2) + 65;
-                if (game.isGameState(PLAYING)) {
+                if (game.inState(PLAYING)) {
                     getJoke();
                     game.state = OVER;
                 }
@@ -186,7 +186,7 @@ const game = {
         create: function() {
 
             // Only draws the ready image if the current game state is 'ready'
-            if (game.isGameState(READY)) {
+            if (game.inState(READY)) {
                 $gameContext.drawImage(sprite, this.gr.x, this.gr.y, this.gr.width, this.gr.height, this.canvasX, this.canvasY, this.gr.width, this.gr.height)
             }
         }
@@ -199,7 +199,7 @@ const game = {
         create: function() {
 
             // Only draws the over image if the current game state is 'over'
-            if (game.isGameState(OVER)) {
+            if (game.inState(OVER)) {
                 $gameContext.drawImage(sprite, this.go.x, this.go.y, this.go.width, this.go.height, this.canvasX, this.canvasY, this.go.width, this.go.height)
             }
         
@@ -207,7 +207,7 @@ const game = {
     },
 
     // Checks if the current game state matches a given state.
-    isGameState: function(state) {
+    inState: function(state) {
         return this.state == state;
     }
 };
@@ -233,6 +233,7 @@ const environment = {
     foreground: {
         canvasX: 0,
         canvasY: $gameCanvas.height() - 112,
+        deltaX: 1,
         fg: undefined,
 
         // Draws the foreground image to the canvas.
@@ -240,7 +241,15 @@ const environment = {
 
             $gameContext.drawImage(sprite, this.fg.x, this.fg.y, this.fg.width, this.fg.height, this.canvasX, this.canvasY, this.fg.width, this.fg.height);
             $gameContext.drawImage(sprite, this.fg.x, this.fg.y, this.fg.width, this.fg.height, this.canvasX + this.fg.width, this.canvasY, this.fg.width, this.fg.height);
+            $gameContext.drawImage(sprite, this.fg.x, this.fg.y, this.fg.width, this.fg.height, this.canvasX + (this.fg.width * 2), this.canvasY, this.fg.width, this.fg.height);
+        },
 
+        update: function() {
+
+            if (game.inState(PLAYING)) {
+
+                this.canvasX = ((this.canvasX - this.deltaX) % (this.fg.width));
+            }
         }
     }
 };
@@ -352,13 +361,19 @@ const paint = () => {
  */
 const tick = () => {
 
+    // Updates the chuck animation frames.
     chuck.update();
+
+    // Updates the foreground position.
+    environment.foreground.update();
+
+    // Paints the game details on the canvas.
     paint();
 
-    //Increment the game frames each loop
+    // Increment the game frames each tick.
     gameFrames++;
 
-    //Perform animation request.
+    // Perform animation request.
     requestAnimationFrame(tick);
 
 };

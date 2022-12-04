@@ -74,9 +74,7 @@ header > p {
     font-weight: 100;
 }
 
-i.dark-mode {
-    color: rgb(255, 255, 255);
-}
+
 
 #switch{
     top: 6px;
