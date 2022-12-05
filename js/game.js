@@ -103,8 +103,8 @@ const chuck = {
     frame: 0,
     speedMultiplier: 0,
     physicsGravity: 0.25,
-    collisionRadius: 17,
-    jumpRate: 5,
+    collisionRadius: 10,
+    jumpRate: 4,
     rotation: 0,
     canvasX: 50,
     canvasY: 150,
@@ -279,7 +279,7 @@ const environment = {
  
             if (!game.inState(PLAYING)) return;
 
-            if ((gameFrames % 100) == 0) {
+            if ((gameFrames % 115) == 0) {
                 this.position.push({
                     x: $gameCanvas.width(),
                     y: (this.maxCanvasY * (Math.random() + 1))
@@ -289,10 +289,37 @@ const environment = {
             this.position.forEach(element => {
                 element.x -= this.deltaX;
 
+                var bottomObstacleY = (element.y + 400 + this.safeZoneHeight);
+
+                // TODO!! Make this bottome collision detections code better.
+
+                // Top obstacle collision mapping.
+                if (chuck.canvasX + chuck.collisionRadius > element.x && 
+                    chuck.canvasX - chuck.collisionRadius < element.x + this.above.data.width &&
+                    chuck.canvasY + chuck.collisionRadius > element.y && 
+                    chuck.canvasY - chuck.collisionRadius < element.y + this.above.data.height) {
+                        game.state = OVER;
+                }
+
+                
+                // Bottom obstacle collision mapping.
+                if (chuck.canvasX + chuck.collisionRadius > element.x && 
+                    chuck.canvasX - chuck.collisionRadius < element.x + this.above.data.width &&
+                    chuck.canvasY + chuck.collisionRadius > bottomObstacleY && 
+                    chuck.canvasY - chuck.collisionRadius < bottomObstacleY + this.above.data.height) {
+                        game.state = OVER;
+
+                }
+
                 // Prevent rendering of obstacles after it's passed the visible canvas.
                 if (element.x + 252 <= 0) this.position.shift();
             });
 
+        },
+
+        // Clears existing obstacles...
+        reset: function () {
+            this.position = [];
         }
     },
     update: function(type) {
@@ -324,8 +351,9 @@ const gameClickListener = () => {
             break;
 
         case OVER: 
-        $jokeParagraph.text('Play for a Chuck Norris joke!');
+            $jokeParagraph.text('Play for a Chuck Norris joke!');
             chuck.reset();
+            environment.obstacle.reset();
             game.state = READY
             break;
 
