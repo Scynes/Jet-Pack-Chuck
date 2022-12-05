@@ -83,6 +83,10 @@ const buildSpriteReferences = () => {
     environment.foreground.data = spriteInfo.gameForeground;
     environment.obstacle.above.data = spriteInfo.gameCactiUp;
     environment.obstacle.below.data = spriteInfo.gameCactiDown;
+    game.medal.bronze = spriteInfo.bronzeChuckCoin;
+    game.medal.silver = spriteInfo.silverChuckCoin;
+    game.medal.gold = spriteInfo.goldChuckCoin;
+    game.medal.platinum = spriteInfo.platinumChuckCoin;
 }
 
 /**
@@ -104,7 +108,7 @@ const chuck = {
     speedMultiplier: 0,
     physicsGravity: 0.25,
     collisionRadius: 10,
-    jumpRate: 4,
+    jumpRate: 4.5,
     rotation: 0,
     canvasX: 50,
     canvasY: 150,
@@ -207,6 +211,99 @@ const game = {
             }
         
         }
+    },
+    start: {
+        canvasX: 195,
+        canvasY: 310,
+        width: 85,
+        height: 25,
+
+        clickedOn: function(x, y) {
+        
+            if (x >= this.canvasX &&
+                x <= this.canvasX + this.width &&
+                y >= this.canvasY && 
+                y <= this.canvasY + this.height) {
+                    return true;
+            }
+            return false;
+        }
+    },
+    medal: {
+
+        bronze: undefined,
+        silver: undefined,
+        gold: undefined,
+        platinum: undefined,
+
+        create: function() {
+
+            if (game.inState(OVER)) {
+                const rank = this.getMedal();
+
+                if (rank == 0) return;
+
+                $gameContext.drawImage(sprite, rank.x, rank.y, rank.width, rank.height, 133, 208, rank.width, rank.height);          
+            }
+        },
+
+        getMedal: function() {
+            const bronzeRank = 25;
+            const silverRank = 75;
+            const goldRank = 175;
+            const platinumRank = 450;
+            
+            if (game.score.points < bronzeRank)
+                return 0;
+            if (game.score.points < silverRank)
+                return this.bronze;
+            if (game.score.points < goldRank)
+                return this.silver;
+            if (game.score.points < platinumRank)
+                return this.gold;
+
+            return platinum;
+        }
+    },
+    score: {
+        personalBest: (localStorage.getItem('jpc-pb-score') || 0),
+        points: 0,
+
+        create: function() {
+            $gameContext.fillStyle = '#FFF';
+            $gameContext.strokeStyle = '#111';
+
+            switch (game.state) {
+
+                case PLAYING:
+                    $gameContext.lineWidth = 2;
+                    $gameContext.font = '45px Teko';
+                    $gameContext.fillText(this.points, $gameCanvas.width() / 2, 50);
+                    $gameContext.strokeText(this.points, $gameCanvas.width() / 2, 50);
+                    break;
+
+                case OVER:
+                    $gameContext.font = '25px Teko';
+                    $gameContext.fillText(this.points, 285, 215);
+                    $gameContext.strokeText(this.points, 285, 215);
+                    $gameContext.fillText(this.personalBest, 285, 257);
+                    $gameContext.strokeText(this.personalBest, 285, 257);
+                    break;
+
+                default:
+                    
+                    break;
+
+            }
+        }
+    },
+
+    reset: function() {
+        $jokeParagraph.text('Play for a Chuck Norris joke!');
+        chuck.reset();
+        environment.obstacle.reset();
+        game.state = READY
+        game.score.points = 0;
     },
 
     // Checks if the current game state matches a given state.
@@ -311,6 +408,11 @@ const environment = {
 
                 }
 
+                if (element.x + this.above.data.width <= 0 && element.x + this.above.data.width >= -1) {
+                    game.score.points += 1;
+                    game.score.personalBest = Math.max(game.score.points, game.score.personalBest);
+                    localStorage.setItem('jpc-pb-score', 5);
+                }
                 // Prevent rendering of obstacles after it's passed the visible canvas.
                 if (element.x + 252 <= 0) this.position.shift();
             });
@@ -337,7 +439,7 @@ const environment = {
  * 
  * @param {*} event 
  */
-const gameClickListener = () => {
+const gameClickListener = (event) => {
 
     switch (game.state) {
 
@@ -350,11 +452,19 @@ const gameClickListener = () => {
             chuck.boost();
             break;
 
-        case OVER: 
-            $jokeParagraph.text('Play for a Chuck Norris joke!');
-            chuck.reset();
-            environment.obstacle.reset();
-            game.state = READY
+        case OVER:
+            if (event.keyCode === 32) {
+                game.reset();
+                break;
+            }
+            var rectangle = $gameCanvas.get(0).getBoundingClientRect();
+            var x = event.clientX - rectangle.left;
+            var y = event.clientY - rectangle.top;
+            console.log(x, y)
+
+            if (game.start.clickedOn(x, y)) {
+                game.reset();
+            }
             break;
 
         //Just a fall back
@@ -374,9 +484,8 @@ const gameClickListener = () => {
 const keyPressedListener = event => {
 
     if (event.keyCode === 32) {
-        gameClickListener();
+        gameClickListener(event);
     }
-
 };
 
 /**
@@ -431,8 +540,9 @@ const paint = () => {
     environment.foreground.create();
     game.ready.create();
     game.over.create();
+    game.medal.create();
     chuck.animate();
-
+    game.score.create();
 };
 
 /**
