@@ -13,6 +13,17 @@
 
 }
 
+class GameAudio extends Audio {
+
+    /**
+     * Constructs a new Audio object that defines the source path on construction.
+     */
+    constructor(path) {
+        super();
+        super.src = path;
+    }
+}
+
 /**
  * jQuery object referencing the joke paragraph container.
  */
@@ -34,6 +45,11 @@ const $gameContext = $gameCanvas.get(0).getContext('2d');
  const sprite = new SpriteImage('./images/sprites/sprite.png');
 
  /**
+ * Holds the GameAudio objects containing sound file information.
+ */
+const GAME_SOUNDS = {};
+
+ /**
   * Default angle degree for tilting sprites.
   */
  const degree = (Math.PI / 180);
@@ -50,7 +66,7 @@ const $gameContext = $gameCanvas.get(0).getContext('2d');
 /**
  * Holds the JSON object containing sprite coordinate information.
  */
-let spriteInfo;
+let spriteInfo = undefined;
 
 /**
  * The current game frames.
@@ -61,6 +77,39 @@ let gameFrames = 0;
  * The current joke.
  */
 let joke = '';
+
+/**
+ * Toggles sounds on and off.
+ */
+let soundsOn = true;
+
+/**
+ * Plays a sound only if sounds are toggled on.
+ */
+function playSound(sound) {
+    if (!soundsOn) return;
+
+    var clone = sound.cloneNode(true);
+
+    clone.playbackRate = sound.playbackRate;
+    clone.volume = sound.volume;
+
+    return clone.play();
+}
+
+/**
+ * Plays a sound immediately after another sounded ahs ended.
+ * 
+ * @param {*} firstSound 
+ * @param {*} secondSound 
+ */
+const playSoundAfterDelayed = (firstSound, secondSound, seconds) => {
+    if (!soundsOn) return;
+
+    setTimeout(function () {
+        playSound(secondSound);
+    }, seconds * 1000);
+}
 
 /**
  * Handles toggling dark mode styling on the webpage.
@@ -127,6 +176,7 @@ const chuck = {
     // Calculates the boost jump to render.
     boost: function () {
         this.speedMultiplier =- this.jumpRate;
+        playSound(GAME_SOUNDS.JET_PACK);
     },
 
     // Tesets the chuck animation variables to defaults.
@@ -167,6 +217,7 @@ const chuck = {
                 if (game.inState(PLAYING)) {
                     getJoke();
                     game.state = OVER;
+                    playSound(GAME_SOUNDS.GAME_OVER);
                 }
             }
 
@@ -388,25 +439,25 @@ const environment = {
                 // TODO!! Make this bottome collision detections code better.
 
                 // Top obstacle collision mapping.
-                if (chuck.canvasX + chuck.collisionRadius > element.x && 
+                if ((chuck.canvasX + chuck.collisionRadius > element.x && 
                     chuck.canvasX - chuck.collisionRadius < element.x + this.above.data.width &&
                     chuck.canvasY + chuck.collisionRadius > element.y && 
-                    chuck.canvasY - chuck.collisionRadius < element.y + this.above.data.height) {
-                        game.state = OVER;
-                }
-
-                
-                // Bottom obstacle collision mapping.
-                if (chuck.canvasX + chuck.collisionRadius > element.x && 
+                    chuck.canvasY - chuck.collisionRadius < element.y + this.above.data.height) || 
+                    // Bottom mapping
+                    (chuck.canvasX + chuck.collisionRadius > element.x && 
                     chuck.canvasX - chuck.collisionRadius < element.x + this.above.data.width &&
                     chuck.canvasY + chuck.collisionRadius > bottomObstacleY && 
-                    chuck.canvasY - chuck.collisionRadius < bottomObstacleY + this.above.data.height) {
+                    chuck.canvasY - chuck.collisionRadius < bottomObstacleY + this.above.data.height)) {
                         game.state = OVER;
-
+                        //playSound(GAME_SOUNDS.IMPACT)
+                        //playSound(GAME_SOUNDS.GAME_OVER);
+                        playSoundAfterDelayed(playSound(GAME_SOUNDS.IMPACT), GAME_SOUNDS.GAME_OVER, .7);
+                        getJoke();
                 }
 
-                if (element.x + this.above.data.width <= 0 && element.x + this.above.data.width >= -1) {
+                if (element.x + this.above.data.width <= 90 && element.x + this.above.data.width >= 89) {
                     game.score.points += 1;
+                    playSound(GAME_SOUNDS.SCORE);
                     game.score.personalBest = Math.max(game.score.points, game.score.personalBest);
                     localStorage.setItem('jpc-pb-score', 5);
                 }
@@ -490,11 +541,19 @@ const keyPressedListener = event => {
  */
 const loadJSON = () => {
     $.ajax({
-        url: './js/sprite-info.json',
+        url: './js/game-data.json',
         dataType: 'json',
         async: false,
         success: data => {
-            spriteInfo = data;
+            let gameSounds = data.sounds;
+            spriteInfo = data.sprites;
+
+            for (sound in gameSounds) {
+                
+                GAME_SOUNDS[sound] = new GameAudio(gameSounds[sound].file);
+                GAME_SOUNDS[sound].playbackRate = gameSounds[sound].playbackSpeed;
+                GAME_SOUNDS[sound].volume = gameSounds[sound].volume;
+            }
             
             // Populates the animation frame data.
             chuck.frames.forEach(element => {
@@ -520,7 +579,6 @@ const getJoke = () => {
 
         }
     )
-
 };
 
 /**

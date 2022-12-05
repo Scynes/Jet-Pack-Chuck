@@ -1,0 +1,123 @@
+{
+    "sprites": {
+        "chuckIdle": {
+            "x": 413,
+            "y": 114,
+            "width": 18,
+            "height": 24
+        },
+        "chuckIgnition": {
+            "x": 440,
+            "y": 114,
+            "width": 18,
+            "height": 28
+        },
+        "chuckBlasting": {
+            "x": 467,
+            "y": 114,
+            "width": 18,
+            "height": 34
+        },
+        "bronzeChuckCoin": {
+            "x": 340,
+            "y": 161,
+            "width": 44,
+            "height": 44
+        },
+        "silverChuckCoin": {
+            "x": 340,
+            "y": 114,
+            "width": 44,
+            "height": 44
+        },
+        "goldChuckCoin": {
+            "x": 293,
+            "y": 161,
+            "width": 44,
+            "height": 44
+        },
+        "platinumChuckCoin": {
+            "x": 293,
+            "y": 114,
+            "width": 44,
+            "height": 44
+        },
+        "gameBackground": {
+            "x": 0,
+            "y": 0,
+            "width": 276,
+            "height": 228
+        },
+        "gameForeground": {
+            "x": 276,
+            "y": 0,
+            "width": 224,
+            "height": 112
+        },
+        "gameCactiDown": {
+            "x": 502,
+            "y": 0,
+            "width": 52,
+            "height": 400
+        },
+        "gameCactiUp": {
+            "x": 554,
+            "y": 0,
+            "width": 52,
+            "height": 400
+        },
+        "gameReady": {
+            "x": 0,
+            "y": 228,
+            "width": 174,
+            "height": 152
+        },
+        "gameOver": {
+            "x": 174,
+            "y": 228,
+            "width": 226,
+            "height": 236
+        },
+        "startButton": {
+            "x": 0,
+            "y": 228,
+            "width": 174,
+            "height": 152
+        },
+        "gameResults": {
+            "x": 0,
+            "y": 228,
+            "width": 174,
+            "height": 152
+        },
+        "deathPoop": {
+            "x": 456,
+            "y": 152,
+            "width": 24,
+            "height": 32
+        }
+    },
+    "sounds": {
+        "SCORE": {
+            "file": "./audio/score.wav",
+            "playbackSpeed": 1.5,
+            "volume": 0.5
+        },
+        "IMPACT": {
+            "file": "./audio/impact.wav",
+            "playbackSpeed": 1,
+            "volume": 1
+        },
+        "JET_PACK": {
+            "file": "./audio/jet-pack.wav",
+            "playbackSpeed": 2.5,
+            "volume": 0.4
+        },
+        "GAME_OVER": {
+            "file": "./audio/game-over.wav",
+            "playbackSpeed": 1.3,
+            "volume": 0.4
+        }
+    }
+}
+
