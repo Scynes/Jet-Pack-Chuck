@@ -248,13 +248,10 @@ const game = {
         },
 
         getMedal: function() {
-            const bronzeRank = 25;
-            const silverRank = 75;
-            const goldRank = 175;
-            const platinumRank = 450;
+            const silverRank = 25;
+            const goldRank = 100;
+            const platinumRank = 200;
             
-            if (game.score.points < bronzeRank)
-                return 0;
             if (game.score.points < silverRank)
                 return this.bronze;
             if (game.score.points < goldRank)
