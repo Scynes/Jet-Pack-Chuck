@@ -85,7 +85,7 @@ let soundsOn = true;
 /**
  * This will be set
  */
-let jetpackSoundOn = true;
+let jetpackSoundOn = false;
 
 /**
  * Plays a sound only if sounds are toggled on.
@@ -178,7 +178,10 @@ const chuck = {
     // Calculates the boost jump to render.
     boost: function () {
         this.speedMultiplier =- this.jumpRate;
-        playSound(GAME_SOUNDS.JET_PACK);
+
+        if (jetpackSoundOn) {
+            playSound(GAME_SOUNDS.JET_PACK);
+        }
     },
 
     // Tesets the chuck animation variables to defaults.
@@ -568,6 +571,10 @@ const loadJSON = () => {
                 GAME_SOUNDS[sound] = new GameAudio(gameSounds[sound].file);
                 GAME_SOUNDS[sound].playbackRate = gameSounds[sound].playbackSpeed;
                 GAME_SOUNDS[sound].volume = gameSounds[sound].volume;
+            }
+
+            if ($(window).width() > 500) {
+                jetpackSoundOn = true;
             }
             
             // Populates the animation frame data.
