@@ -42,7 +42,7 @@ const $gameContext = $gameCanvas.get(0).getContext('2d');
 /**
  * Image object containing game sprite images.
  */
- const sprite = new SpriteImage('./images/sprites/sprite.png');
+ const sprite = new SpriteImage('./images/sprites/sprite_custom.png');
 
  /**
  * Holds the GameAudio objects containing sound file information.
@@ -416,7 +416,7 @@ const environment = {
                 var belowY = element.y + 400 + this.safeZoneHeight;
 
                 $gameContext.drawImage(sprite, this.above.data.x, this.above.data.y, this.above.data.width, this.above.data.height, element.x, aboveY, this.above.data.width, this.above.data.height);
-                $gameContext.drawImage(sprite, this.below.data.x, this.below.data.y, this.below.data.width, this.below.data.height, element.x, belowY, this.below.data.width, this.below.data.height);
+                $gameContext.drawImage(sprite, this.below.data.x, this.below.data.y, this.below.data.width, this.below.data.height, element.x - 60, belowY, this.below.data.width, this.below.data.height);    
             })
         },
 
