@@ -93,16 +93,13 @@ let jetpackSoundOn = true;
 function playSound(sound) {
     if (!soundsOn) return;
 
-    var clone = sound.cloneNode(true);
+    sound.currentTime = sound.currentTime > 0 ? 0 : 0;
 
-    clone.playbackRate = sound.playbackRate;
-    clone.volume = sound.volume;
-
-    return clone.play();
+    return sound.play();
 }
 
 /**
- * Plays a sound immediately after another sounded has ended and sounds are toggled on.
+ * Plays a sound after another sound with a delay.
  * 
  * @param {*} firstSound 
  * @param {*} secondSound 
@@ -181,7 +178,7 @@ const chuck = {
     // Calculates the boost jump to render.
     boost: function () {
         this.speedMultiplier =- this.jumpRate;
-        //playSound(GAME_SOUNDS.JET_PACK);
+        playSound(GAME_SOUNDS.JET_PACK);
     },
 
     // Tesets the chuck animation variables to defaults.

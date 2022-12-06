@@ -116,7 +116,7 @@
         },
         "JET_PACK": {
             "file": "./audio/jet-pack.wav",
-            "playbackSpeed": 2.5,
+            "playbackSpeed": 4.5,
             "volume": 0.4
         },
         "GAME_OVER": {
