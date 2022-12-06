@@ -80,7 +80,12 @@ let joke = '';
 /**
  * Toggles sounds on and off.
  */
-let soundsOn = false;
+let soundsOn = true;
+
+/**
+ * This will be set
+ */
+let jetpackSoundOn = true;
 
 /**
  * Plays a sound only if sounds are toggled on.
@@ -176,7 +181,7 @@ const chuck = {
     // Calculates the boost jump to render.
     boost: function () {
         this.speedMultiplier =- this.jumpRate;
-        playSound(GAME_SOUNDS.JET_PACK);
+        //playSound(GAME_SOUNDS.JET_PACK);
     },
 
     // Tesets the chuck animation variables to defaults.
