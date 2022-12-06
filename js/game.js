@@ -10,7 +10,6 @@
         super();
         super.src = path;
     }
-
 }
 
 class GameAudio extends Audio {
@@ -98,7 +97,7 @@ function playSound(sound) {
 }
 
 /**
- * Plays a sound immediately after another sounded ahs ended.
+ * Plays a sound immediately after another sounded has ended and sounds are toggled on.
  * 
  * @param {*} firstSound 
  * @param {*} secondSound 
@@ -130,6 +129,7 @@ const buildSpriteReferences = () => {
     game.over.go = spriteInfo.gameOver;
     environment.background.data = spriteInfo.gameBackground;
     environment.foreground.data = spriteInfo.gameForeground;
+    environment.spikes.data = spriteInfo.spikes;
     environment.obstacle.above.data = spriteInfo.gameCactiUp;
     environment.obstacle.below.data = spriteInfo.gameCactiDown;
     game.medal.bronze = spriteInfo.bronzeChuckCoin;
@@ -211,13 +211,18 @@ const chuck = {
             this.speedMultiplier += this.physicsGravity;
             this.canvasY += this.speedMultiplier;
 
+            if ((this.canvasY + (chuck.height / 2)) < 20 && !game.inState(OVER)) {
+                game.state = OVER;
+                playSoundAfterDelayed(playSound(GAME_SOUNDS.IMPACT), GAME_SOUNDS.GAME_OVER, 1);           
+            }
+
             if (this.isDead(chuck)) {
 
                 this.canvasY = $gameCanvas.height() - environment.foreground.data.height - (chuck.height / 2) + 65;
                 if (game.inState(PLAYING)) {
                     getJoke();
                     game.state = OVER;
-                    playSound(GAME_SOUNDS.GAME_OVER);
+                    playSoundAfterDelayed(playSound(GAME_SOUNDS.IMPACT), GAME_SOUNDS.GAME_OVER, 0.2);           
                 }
             }
 
@@ -395,6 +400,16 @@ const environment = {
             $gameContext.drawImage(sprite, this.data.x, this.data.y, this.data.width, this.data.height, this.canvasX + (this.data.width * 2), this.canvasY, this.data.width, this.data.height);
         }
     },
+    spikes: {
+        canvasX: 0,
+        canvasY: 0,
+        data: undefined,
+
+        create: function() {
+            $gameContext.drawImage(sprite, this.data.x, this.data.y, this.data.width, this.data.height, this.canvasX, this.canvasY, this.data.width, this.data.height);
+            $gameContext.drawImage(sprite, this.data.x, this.data.y, this.data.width, this.data.height, this.canvasX + this.data.width, this.canvasY, this.data.width, this.data.height);
+        }
+    },
     obstacle: {
 
         safeZoneHeight: 100,
@@ -449,8 +464,6 @@ const environment = {
                     chuck.canvasY + chuck.collisionRadius > bottomObstacleY && 
                     chuck.canvasY - chuck.collisionRadius < bottomObstacleY + this.above.data.height)) {
                         game.state = OVER;
-                        //playSound(GAME_SOUNDS.IMPACT)
-                        //playSound(GAME_SOUNDS.GAME_OVER);
                         playSoundAfterDelayed(playSound(GAME_SOUNDS.IMPACT), GAME_SOUNDS.GAME_OVER, .7);
                         getJoke();
                 }
@@ -590,6 +603,7 @@ const paint = () => {
     $gameContext.fillStyle = '#faaf3d';
     $gameContext.fillRect(0, 0, $gameCanvas.width(), $gameCanvas.height());
 
+    environment.spikes.create();
     environment.background.create();
     environment.obstacle.create();
     environment.foreground.create();
