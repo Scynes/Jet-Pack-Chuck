@@ -80,7 +80,7 @@ let joke = '';
 /**
  * Toggles sounds on and off.
  */
-let soundsOn = true;
+let soundsOn = false;
 
 /**
  * Plays a sound only if sounds are toggled on.
