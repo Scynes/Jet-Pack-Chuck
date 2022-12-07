@@ -1,4 +1,26 @@
 {
+    "game": {
+        "soundsOn": true,
+        "FPS_CAP": 80
+    },
+    "chuck": {
+        "physicsGravity": 0.25,
+        "collisionRadius": 10,
+        "jumpRate": 4.5,
+        "speedMultiplier": 0,
+        "canvasX": 50,
+        "canvasY": 150,
+        "frames": [
+            {"state": "chuckIdle"},
+            {"state": "chuckIgnition"},
+            {"state": "chuckBlasting"},
+            {"state": "chuckIgnition"}
+        ]
+    },
+    "obstacle": {
+        "safeZoneHeight": 100,
+        "maxCanvasY": -150
+    },
     "sprites": {
         "chuckIdle": {
             "x": 413,

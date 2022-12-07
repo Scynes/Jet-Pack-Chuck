@@ -63,11 +63,6 @@ const PLAYING = 1;
 const OVER = 2;
 
 /**
- * The refresh rate for the game cycles.
- */
-const FPS_CAP = 60;
-
-/**
  * Stores the timestamp for refresh rates.
  */
 let past = Date.now();
@@ -88,11 +83,6 @@ let gameFrames = 0;
 let joke = '';
 
 /**
- * Toggles sounds on and off.
- */
-let soundsOn = true;
-
-/**
  * This will be set
  */
 let jetpackSoundOn = true;
@@ -101,7 +91,7 @@ let jetpackSoundOn = true;
  * Plays a sound only if sounds are toggled on.
  */
 function playSound(sound) {
-    if (!soundsOn) return;
+    if (!game.soundsOn) return;
 
     sound.currentTime = sound.currentTime > 0 ? 0 : 0;
 
@@ -115,7 +105,7 @@ function playSound(sound) {
  * @param {*} secondSound 
  */
 const playSoundAfterDelayed = (firstSound, secondSound, seconds) => {
-    if (!soundsOn) return;
+    if (!game.soundsOn) return;
 
     setTimeout(function () {
         playSound(secondSound);
@@ -159,20 +149,8 @@ const buildSpriteReferences = () => {
  */
 const chuck = {
 
-    frames: [
-        {state: 'chuckIdle'}, //1st frame
-        {state: 'chuckIgnition'}, //2nd frame
-        {state: 'chuckBlasting'}, //3rd frame
-        {state: 'chuckIgnition'}  //4th frame
-    ],
     frame: 0,
-    speedMultiplier: 0,
-    physicsGravity: 0.25,
-    collisionRadius: 10,
-    jumpRate: 4.5,
     rotation: 0,
-    canvasX: 50,
-    canvasY: 150,
 
     // Draws the animation based on the current frame.
     animate: function () {
@@ -421,14 +399,13 @@ const environment = {
         data: undefined,
 
         create: function() {
+
             $gameContext.drawImage(sprite, this.data.x, this.data.y, this.data.width, this.data.height, this.canvasX, this.canvasY, this.data.width, this.data.height);
             $gameContext.drawImage(sprite, this.data.x, this.data.y, this.data.width, this.data.height, this.canvasX + this.data.width, this.canvasY, this.data.width, this.data.height);
         }
     },
     obstacle: {
 
-        safeZoneHeight: 100,
-        maxCanvasY: -150,
         deltaX: 2,
         position: [],
 
@@ -565,6 +542,16 @@ const keyPressedListener = event => {
 };
 
 /**
+ * Caches and assigns the core game variables.
+ * 
+ * @param {*} gameVars 
+ */
+const cacheGameVars = (to, gameVars) => {
+
+    Object.assign(to, gameVars);
+}
+
+/**
  * Caches the sound data for game sounds into memory as a GameAudio object.
  * 
  * @param gameSounds The sound objects.
@@ -601,6 +588,9 @@ const loadJSON = () => {
         url: './js/game-data.json',
         async: false,
         success: data => {
+            cacheGameVars(game, data.game);
+            cacheGameVars(chuck, data.chuck);
+            cacheGameVars(environment.obstacle, data.obstacle)
             cacheSounds(data.sounds);
             cacheSpritesAndAnimations(data.sprites);
         }
@@ -651,10 +641,10 @@ const tick = () => {
 
     const delta = Date.now() - past;
      
-    if (delta > (1000 / FPS_CAP)) {
+    if (delta > (1000 / game.FPS_CAP)) {
         
         // Sets the correct time difference for FPS
-        past = Date.now() - (delta % (1000 / FPS_CAP));
+        past = Date.now() - (delta % (1000 / game.FPS_CAP));
          
         // Updates the chuck animation frames.
         chuck.update();
