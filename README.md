@@ -27,8 +27,6 @@
   <p align="center">
     A flappy game type cloan, mixed with Chuck Norris badassery.
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a>
-    <br />
     <br />
     <a href="https://scynes.github.io/Jet-Pack-Chuck/">View Demo</a>
     ·
@@ -53,7 +51,6 @@
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
@@ -123,9 +120,9 @@ _If you'd like to use this as a resource to build upon, feel free to clone the r
 <!-- USAGE EXAMPLES -->
 ## How to Play!
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+--
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -200,8 +197,7 @@ Feel free to contact me through my LinkedIn link at the top if you have any ques
 [license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
 [license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/othneildrew
-[product-screenshot]: images/screenshot.png
+[linkedin-url]: https://www.linkedin.com/in/dustin-greyfield-web-developer/
 
 [JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=JQuery&logoColor=white
 [JQuery-url]: https://jquery.com 
