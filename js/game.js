@@ -41,26 +41,36 @@ const $gameContext = $gameCanvas.get(0).getContext('2d');
 /**
  * Image object containing game sprite images.
  */
- const sprite = new SpriteImage('./images/sprites/sprite_custom.png');
+const sprite = new SpriteImage('./images/sprites/sprite_custom.png');
 
  /**
  * Holds the GameAudio objects containing sound file information.
  */
 const GAME_SOUNDS = {};
 
- /**
-  * Default angle degree for tilting sprites.
-  */
- const degree = (Math.PI / 180);
+/**
+ * Default angle degree for tilting sprites.
+ */
+const degree = (Math.PI / 180);
 
- // Game ready state.
- const READY = 0;
+// Game ready state.
+const READY = 0;
 
- // Game playing state.
- const PLAYING = 1;
+// Game playing state.
+const PLAYING = 1;
 
- // Game over state.
- const OVER = 2;
+// Game over state.
+const OVER = 2;
+
+/**
+ * The refresh rate for the game cycles.
+ */
+const FPS_CAP = 60;
+
+/**
+ * Stores the timestamp for refresh rates.
+ */
+let past = Date.now();
 
 /**
  * Holds the JSON object containing sprite coordinate information.
@@ -150,10 +160,10 @@ const buildSpriteReferences = () => {
 const chuck = {
 
     frames: [
-        {state: 'chuckIdle', x: 0, y: 0, width: 0, height: 0}, //1st frame
-        {state: 'chuckIgnition', x: 0, y: 0, width: 0, height: 0}, //2nd frame
-        {state: 'chuckBlasting', x: 0, y: 0, width: 0, height: 0}, //3rd frame
-        {state: 'chuckIgnition', x: 0, y: 0, width: 0, height: 0}  //4th frame
+        {state: 'chuckIdle'}, //1st frame
+        {state: 'chuckIgnition'}, //2nd frame
+        {state: 'chuckBlasting'}, //3rd frame
+        {state: 'chuckIgnition'}  //4th frame
     ],
     frame: 0,
     speedMultiplier: 0,
@@ -637,26 +647,32 @@ const paint = () => {
  */
 const tick = () => {
 
-    // Updates the chuck animation frames.
-    chuck.update();
-
-    // Updates the foreground position.
-    environment.update(environment.foreground);
-    environment.update(environment.background)
-
-    // Updates the obstacle positions.
-    environment.obstacle.update();
-
-    // Paints the game details on the canvas.
-    paint();
-
-    // Increment the game frames each tick.
-    gameFrames++;
-
-    // Perform animation request.
     requestAnimationFrame(tick);
-    //console.log(`${performance.memory.usedJSHeapSize / Math.pow(1000, 2)} used MB`);
 
+    const delta = Date.now() - past;
+     
+    if (delta > (1000 / FPS_CAP)) {
+        
+        // Sets the correct time difference for FPS
+        past = Date.now() - (delta % (1000 / FPS_CAP));
+         
+        // Updates the chuck animation frames.
+        chuck.update();
+
+        // Updates the foreground position.
+        environment.update(environment.foreground);
+        environment.update(environment.background)
+
+        // Updates the obstacle positions.
+        environment.obstacle.update();
+
+        // Paints the game details on the canvas.
+        paint();
+
+        // Increment the game frames each tick.
+        gameFrames++;
+    }
+    //console.log(`${performance.memory.usedJSHeapSize / Math.pow(1000, 2)} used MB`);
 };
 
 /**
@@ -682,8 +698,3 @@ sprite.onload = () => {
     // Begin game logic ticking.
      tick();
 }
-
-/**$('<audio>').on('canplaythrough', function(event) {
-    $(this).prependTo($('body'));
-    this.play();
-}).attr('src', './audio/jet-pack.wav').attr('type', 'audio/mpeg');**/
