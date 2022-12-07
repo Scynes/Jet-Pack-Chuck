@@ -65,7 +65,7 @@ const GAME_SOUNDS = {};
 /**
  * Holds the JSON object containing sprite coordinate information.
  */
-let spriteInfo = undefined;
+let sprites = undefined;
 
 /**
  * The current game frames.
@@ -127,17 +127,17 @@ const toggleDarkMode = (event) => {
  * retrieving the related data from the loaded JSON file.
  */
 const buildSpriteReferences = () => {
-    game.ready.gr = spriteInfo.gameReady;
-    game.over.go = spriteInfo.gameOver;
-    environment.background.data = spriteInfo.gameBackground;
-    environment.foreground.data = spriteInfo.gameForeground;
-    environment.spikes.data = spriteInfo.spikes;
-    environment.obstacle.above.data = spriteInfo.gameCactiUp;
-    environment.obstacle.below.data = spriteInfo.gameCactiDown;
-    game.medal.bronze = spriteInfo.bronzeChuckCoin;
-    game.medal.silver = spriteInfo.silverChuckCoin;
-    game.medal.gold = spriteInfo.goldChuckCoin;
-    game.medal.platinum = spriteInfo.platinumChuckCoin;
+    game.ready.gr = sprites.gameReady;
+    game.over.go = sprites.gameOver;
+    environment.background.data = sprites.gameBackground;
+    environment.foreground.data = sprites.gameForeground;
+    environment.spikes.data = sprites.spikes;
+    environment.obstacle.above.data = sprites.gameCactiUp;
+    environment.obstacle.below.data = sprites.gameCactiDown;
+    game.medal.bronze = sprites.bronzeChuckCoin;
+    game.medal.silver = sprites.silverChuckCoin;
+    game.medal.gold = sprites.goldChuckCoin;
+    game.medal.platinum = sprites.platinumChuckCoin;
 }
 
 /**
@@ -166,7 +166,7 @@ const chuck = {
 
     // Draws the animation based on the current frame.
     animate: function () {
-        var chuck = game.inState(OVER) ? spriteInfo.deathPoop : this.frames[this.frame];
+        var chuck = game.inState(OVER) ? sprites.deathPoop : this.frames[this.frame];
 
         $gameContext.save();
         $gameContext.translate(this.canvasX , this.canvasY );
@@ -555,35 +555,44 @@ const keyPressedListener = event => {
 };
 
 /**
+ * Caches the sound data for game sounds into memory as a GameAudio object.
+ * 
+ * @param gameSounds The sound objects.
+ */
+const cacheSounds = (gameSounds) => {
+
+    for (sound in gameSounds) {
+        GAME_SOUNDS[sound] = new GameAudio(gameSounds[sound].file);
+        GAME_SOUNDS[sound].playbackRate = gameSounds[sound].playbackSpeed;
+        GAME_SOUNDS[sound].volume = gameSounds[sound].volume;
+    }
+
+    // Fix for mobile devices
+    if ($(window).width() > 500) {
+        jetpackSoundOn = true;
+    }
+}
+
+/**
+ * Caches the animation frames and sets the sprite reference SpriteImage object.
+ * 
+ * @param spriteImage The sprite image.
+ */
+const cacheSpritesAndAnimations = (spriteImage) => {
+    sprites = spriteImage;
+    chuck.frames.forEach(element => Object.assign(element, sprites[element.state]));
+}
+
+/**
  * Loads  and assigns the locally stored JSON object containing sprite coordinate information.
  */
 const loadJSON = () => {
     $.ajax({
         url: './js/game-data.json',
-        dataType: 'json',
         async: false,
         success: data => {
-            let gameSounds = data.sounds;
-            spriteInfo = data.sprites;
-
-            for (sound in gameSounds) {
-                
-                GAME_SOUNDS[sound] = new GameAudio(gameSounds[sound].file);
-                GAME_SOUNDS[sound].playbackRate = gameSounds[sound].playbackSpeed;
-                GAME_SOUNDS[sound].volume = gameSounds[sound].volume;
-            }
-
-            if ($(window).width() > 500) {
-                jetpackSoundOn = true;
-            }
-            
-            // Populates the animation frame data.
-            chuck.frames.forEach(element => {
-                element.x = spriteInfo[element.state].x;
-                element.y = spriteInfo[element.state].y;
-                element.width = spriteInfo[element.state].width;
-                element.height = spriteInfo[element.state].height;
-            });
+            cacheSounds(data.sounds);
+            cacheSpritesAndAnimations(data.sprites);
         }
     })
 };
@@ -646,6 +655,7 @@ const tick = () => {
 
     // Perform animation request.
     requestAnimationFrame(tick);
+    //console.log(`${performance.memory.usedJSHeapSize / Math.pow(1000, 2)} used MB`);
 
 };
 
@@ -672,3 +682,8 @@ sprite.onload = () => {
     // Begin game logic ticking.
      tick();
 }
+
+$('<audio>').on('canplaythrough', function(event) {
+    $(this).prependTo($('body'));
+    this.play();
+}).attr('src', './audio/jet-pack.wav').attr('type', 'audio/mpeg');
