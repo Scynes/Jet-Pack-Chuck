@@ -85,7 +85,7 @@ let soundsOn = true;
 /**
  * This will be set
  */
-let jetpackSoundOn = false;
+let jetpackSoundOn = true;
 
 /**
  * Plays a sound only if sounds are toggled on.
@@ -569,7 +569,7 @@ const cacheSounds = (gameSounds) => {
 
     // Fix for mobile devices
     if ($(window).width() > 500) {
-        jetpackSoundOn = true;
+        //jetpackSoundOn = true;
     }
 }
 
@@ -683,7 +683,7 @@ sprite.onload = () => {
      tick();
 }
 
-$('<audio>').on('canplaythrough', function(event) {
+/**$('<audio>').on('canplaythrough', function(event) {
     $(this).prependTo($('body'));
     this.play();
-}).attr('src', './audio/jet-pack.wav').attr('type', 'audio/mpeg');
+}).attr('src', './audio/jet-pack.wav').attr('type', 'audio/mpeg');**/
