@@ -1,12 +1,5 @@
-<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
+
 <a name="readme-top"></a>
-<!--
-*** Thanks for checking out the Best-README-Template. If you have a suggestion
-*** that would make this better, please fork the repo and create a pull request
-*** or simply open an issue with the tag "enhancement".
-*** Don't forget to give the project a star!
-*** Thanks again! Now go create something AMAZING! :D
--->
 
 
 
@@ -25,7 +18,7 @@
 
 
   <p align="center">
-    A flappy game type cloan, mixed with Chuck Norris badassery.
+    A flappy game type clone, mixed with Chuck Norris badassery.
     <br />
     <br />
     <a href="https://scynes.github.io/Jet-Pack-Chuck/">View Demo</a>
@@ -54,7 +47,6 @@
         <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
@@ -141,7 +133,7 @@ _If you'd like to use this as a resource to build upon, feel free to clone the r
     - [ ] Expert
     - [ ] Master
 
-See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/Scynes/Jet-Pack-Chuck/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -164,7 +156,7 @@ If you have a game feature suggestion, please open an issue with the tag " game 
 <!-- LICENSE -->
 ## License
 
---
+Distributed under the GNU General Public License v3.0. See `LICENSE.txt` for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -195,7 +187,7 @@ Feel free to contact me through my LinkedIn link at the top if you have any ques
 
 
 [license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
-[license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
+[license-url]: https://github.com/Scynes/Jet-Pack-Chuck/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/dustin-greyfield-web-developer/
 
