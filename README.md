@@ -9,7 +9,6 @@
 
 
 
-<!-- PROJECT LOGO -->
 <br />
 <div align="center">
   <a href="https://github.com/Scynes/Jet-Pack-Chuck">
@@ -126,7 +125,6 @@ _If you'd like to use this as a resource to build upon, feel free to clone the r
 - [x] Add Dynamic Sounds
 - [x] Add Dark Mode (website)
 - [ ] Add Sounds Toggle
-- [ ] Add "components" document to easily copy & paste sections of the readme
 - [ ] Game Difficulty Support
     - [x] Easy
     - [ ] Hard

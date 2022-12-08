@@ -19,7 +19,7 @@
     },
     "obstacle": {
         "safeZoneHeight": 100,
-        "maxCanvasY": -150
+        "maxCanvasY": -200
     },
     "sprites": {
         "chuckIdle": {
